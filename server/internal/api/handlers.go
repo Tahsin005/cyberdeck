@@ -14,6 +14,7 @@ func RegisterHandlers(mux *http.ServeMux) {
 	mux.HandleFunc("GET /config", configHandler)
 	mux.HandleFunc("POST /action/{name}", actionHandler)
 	mux.HandleFunc("POST /reload", reloadHandler)
+	mux.HandleFunc("POST /update-config", updateConfigHandler)
 }
 
 // CorsMiddleware adds headers to allow cross-origin requests.
@@ -21,6 +22,7 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
 			return
@@ -63,4 +65,25 @@ func reloadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewEncoder(w).Encode(map[string]string{"status": "reloaded"})
+}
+
+func updateConfigHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var newConfig config.ConfigData
+	if err := json.NewDecoder(r.Body).Decode(&newConfig); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if err := config.SaveConfig(newConfig); err != nil {
+		log.Println("failed to save config:", err)
+		http.Error(w, "failed to save config", http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{"status": "updated"})
 }

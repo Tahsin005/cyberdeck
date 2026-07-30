@@ -90,47 +90,43 @@ export default function Home() {
           />
 
           {/* Keys */}
-          {loading ? (
-            <div className="py-12 text-center">
-              <p className="text-white/40 font-mono text-xs">
-                loading config…
-              </p>
-            </div>
-          ) : (
-            <div 
-              className="relative flex-1 grid gap-3 overflow-hidden pr-1 grid-cols-5 grid-rows-2 w-full h-full"
-              style={{ scrollbarWidth: "none" }}
-            >
-              {Array.from({ length: 10 }).map((_, index) => {
-                const b = buttons[index];
-                return (
-                  <div
-                    key={b?.id || `empty-${index}`}
-                    className="
-                      relative
-                      w-full
-                      h-full
-                      rounded-[18px]
-                      border
-                      border-white/10
-                    "
-                    style={{
-                      background: "rgba(255,255,255,0.02)",
-                      boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    {b && (
-                      <DeckButton
-                        button={b}
-                        isPressed={pressed === b.id}
-                        onFire={fire}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <div 
+            className="relative flex-1 grid gap-3 overflow-hidden pr-1 grid-cols-5 grid-rows-2 w-full h-full"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {Array.from({ length: 10 }).map((_, index) => {
+              const b = !loading ? buttons[index] : null;
+              
+              return (
+                <div
+                  key={b?.id || `slot-${index}`}
+                  className="
+                    relative
+                    w-full
+                    h-full
+                    rounded-[18px]
+                    border
+                    border-white/10
+                    overflow-hidden
+                  "
+                  style={{
+                    background: "rgba(255,255,255,0.02)",
+                    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  {loading ? (
+                    <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
+                  ) : b ? (
+                    <DeckButton
+                      button={b}
+                      isPressed={pressed === b.id}
+                      onFire={fire}
+                    />
+                  ) : null}
+                </div>
+              );
+            })}
+          </div>
 
           <DeckFooter status={status} onReload={loadConfig} />
         </div>

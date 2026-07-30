@@ -42,6 +42,18 @@ func LoadConfig() error {
 	return nil
 }
 
+// SaveConfig writes the given ConfigData back to config.json and reloads the memory state.
+func SaveConfig(c ConfigData) error {
+	data, err := json.MarshalIndent(c, "", "    ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile("config.json", data, 0644); err != nil {
+		return err
+	}
+	return LoadConfig()
+}
+
 // GetConfig returns a thread-safe copy of the current configuration.
 func GetConfig() ConfigData {
 	mu.RLock()
