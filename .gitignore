@@ -1,0 +1,19 @@
+# Runtime artifacts (created by the start script)
+logs/
+.pids/
+
+# Server — personal button config
+server/config.json
+
+# Client — Next.js / Node
+client/node_modules/
+client/.next/
+client/next-env.d.ts
+client/.vercel/
+client/package-lock.json
+
+# Editor / OS
+.vscode/
+*.swp
+*~
+.DS_Store
