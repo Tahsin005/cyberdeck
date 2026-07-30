@@ -10,7 +10,7 @@ import { DeckFooter } from "../components/DeckFooter";
 export default function Home() {
   const { buttons, status, pressed, loading, loadConfig, fire } =
     useCyberdeckConfig();
-  const { landscape, ready, toggleRotation } = useLandscapeMode();
+  const { flipped, ready, toggleRotation } = useLandscapeMode();
   const { showInstall, handleInstall } = usePWAInstall();
 
   return (
@@ -38,14 +38,14 @@ export default function Home() {
           background:
             "linear-gradient(145deg, #343434 0%, #111 38%, #050505 100%)",
           // Smooth in-place rotation — immune to address-bar resize
-          transform: landscape ? "rotate(90deg)" : "rotate(0deg)",
+          transform: flipped ? "rotate(-90deg)" : "rotate(90deg)",
           transformOrigin: "center center",
           transition: "transform 0.25s ease, width 0.25s ease, height 0.25s ease",
           // When rotated, CSS width is the on-screen physical height.
           // We expand it to fill the long edge of the phone.
-          width: landscape ? "calc(100dvh - 48px)" : "100%",
-          height: landscape ? "calc(100dvw - 48px)" : "auto",
-          maxWidth: landscape ? "none" : "430px",
+          width: "calc(100dvh - 48px)",
+          height: "calc(100dvw - 48px)",
+          maxWidth: "none",
           // Hide until client has mounted to prevent portrait→landscape flash
           visibility: ready ? "visible" : "hidden",
         }}
@@ -85,7 +85,7 @@ export default function Home() {
           <DeckHeader
             showInstall={showInstall}
             onInstall={handleInstall}
-            landscape={landscape}
+            flipped={flipped}
             onToggleRotation={toggleRotation}
           />
 
@@ -97,15 +97,38 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className={`relative flex-1 content-start grid gap-3 ${landscape ? "grid-cols-5" : "grid-cols-3"}`}>
-              {buttons.map((b) => (
-                <DeckButton
-                  key={b.id}
-                  button={b}
-                  isPressed={pressed === b.id}
-                  onFire={fire}
-                />
-              ))}
+            <div 
+              className="relative flex-1 grid gap-3 overflow-hidden pr-1 grid-cols-5 grid-rows-2 w-full h-full"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {Array.from({ length: 10 }).map((_, index) => {
+                const b = buttons[index];
+                return (
+                  <div
+                    key={b?.id || `empty-${index}`}
+                    className="
+                      relative
+                      w-full
+                      h-full
+                      rounded-[18px]
+                      border
+                      border-white/10
+                    "
+                    style={{
+                      background: "rgba(255,255,255,0.02)",
+                      boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    {b && (
+                      <DeckButton
+                        button={b}
+                        isPressed={pressed === b.id}
+                        onFire={fire}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
 

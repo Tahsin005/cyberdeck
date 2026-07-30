@@ -3,14 +3,14 @@ import * as Icons from "lucide-react";
 interface DeckHeaderProps {
   showInstall: boolean;
   onInstall: () => void;
-  landscape: boolean;
+  flipped: boolean;
   onToggleRotation: () => void;
 }
 
 export function DeckHeader({
   showInstall,
   onInstall,
-  landscape,
+  flipped,
   onToggleRotation,
 }: DeckHeaderProps) {
   return (
@@ -72,13 +72,13 @@ export function DeckHeader({
             transition-all
             duration-200
           "
-          title={landscape ? "Switch to portrait" : "Switch to landscape"}
+          title={flipped ? "Rotate back" : "Rotate 180°"}
         >
           <Icons.RotateCcw
             size={12}
             strokeWidth={2.5}
             style={{
-              transform: landscape ? "rotate(-90deg)" : "none",
+              transform: flipped ? "rotate(180deg)" : "none",
               transition: "transform 0.2s",
             }}
           />

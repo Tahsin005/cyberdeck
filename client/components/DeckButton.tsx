@@ -9,7 +9,7 @@ function KeyIcon({ name, color }: { name: string; color: string }) {
 
   return (
     <Icon
-      size={27}
+      className="w-[60%] h-[60%]"
       strokeWidth={2}
       style={{
         color,
@@ -31,8 +31,10 @@ export function DeckButton({ button, isPressed, onFire }: DeckButtonProps) {
       onClick={() => onFire(button.id)}
       className="
         group
-        relative
-        aspect-square
+        absolute
+        inset-0
+        w-full
+        h-full
         overflow-hidden
         rounded-[18px]
         flex
@@ -118,9 +120,10 @@ export function DeckButton({ button, isPressed, onFire }: DeckButtonProps) {
           flex
           items-center
           justify-center
-          h-11
-          w-11
-          rounded-[13px]
+          h-[45%]
+          aspect-square
+          max-h-[80px]
+          rounded-[25%]
         "
         style={{
           background:

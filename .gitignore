@@ -1,5 +1,6 @@
 # Runtime artifacts (created by the start script)
 logs/
+scripts/
 .pids/
 
 # Server — personal button config
