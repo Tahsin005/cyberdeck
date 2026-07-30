@@ -31,7 +31,7 @@ tunnel, so there's nothing exposed to the network.
 
 ## Requirements
 
-- Go (1.22+, for the `net/http` method/wildcard routing used in `main.go`)
+- Go (1.22+, for the `net/http` method/wildcard routing used in `cmd/server/main.go`)
 - Node.js + npm
 - `adb` (`android-tools` on Arch), with **USB debugging** enabled on the
   phone and the device authorized (`adb devices` should show it as
@@ -44,7 +44,8 @@ cyberdeck/
 ├── client/                  # Next.js frontend
 │   └── app/page.tsx
 ├── server/                  # Go backend
-│   ├── main.go
+│   ├── cmd/server/main.go
+│   ├── internal/            # models, config, api handlers
 │   └── config.json          # ← button definitions live here
 ├── logs/                    # created at runtime by the start script
 ├── .pids/                   # created at runtime by the start script
