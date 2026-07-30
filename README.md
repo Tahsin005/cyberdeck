@@ -17,6 +17,8 @@ grid of buttons over USB; tapping one runs a shell command on the laptop.
 No Wi-Fi, no auth, no cloud — the API is only reachable through the USB
 tunnel, so there's nothing exposed to the network.
 
+![demo-image](image.png)
+
 ## How it works
 
 - **`server/`** — a Go server (stdlib only) that reads `config.json`,
