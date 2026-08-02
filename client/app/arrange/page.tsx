@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { ChevronUp, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -66,6 +67,7 @@ export default function ArrangePage() {
 
   const [items, setItems] = useState<ButtonConfig[]>([]);
   const [saving, setSaving] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setItems(buttons);
@@ -90,6 +92,18 @@ export default function ArrangePage() {
         const newIndex = items.findIndex((item) => item.id === over.id);
         return arrayMove(items, oldIndex, newIndex);
       });
+    }
+  }
+
+  function scrollUp() {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ top: -200, behavior: "smooth" });
+    }
+  }
+
+  function scrollDown() {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ top: 200, behavior: "smooth" });
     }
   }
 
@@ -159,7 +173,6 @@ export default function ArrangePage() {
             boxShadow: "inset 0 1px 1px rgba(255,255,255,0.10), inset 0 -2px 5px rgba(0,0,0,0.9)",
           }}
         >
-          {/* Header */}
           <div className="relative flex items-center justify-between mb-5">
             <div>
               <h1 className="text-white text-lg font-semibold tracking-tight">Arrange</h1>
@@ -182,13 +195,17 @@ export default function ArrangePage() {
             </div>
           </div>
 
-          {/* Grid */}
-          <div 
-            className="relative flex-1 grid gap-3 overflow-hidden pr-1 grid-cols-5 grid-rows-2 w-full h-full"
-            style={{ scrollbarWidth: "none" }}
-          >
+          <div className="relative flex-1 flex flex-row min-h-0 gap-3">
+            <div 
+              ref={scrollRef}
+              className="flex-1 min-h-0 grid gap-3 overflow-y-auto pr-1 grid-cols-5"
+              style={{ 
+                scrollbarWidth: "none",
+                gridAutoRows: "calc(50% - 6px)",
+              }}
+            >
             {loading ? (
-               Array.from({ length: 10 }).map((_, index) => (
+               Array.from({ length: Math.max(10, Math.ceil(items.length / 5) * 5) || 10 }).map((_, index) => (
                  <div
                    key={`loading-${index}`}
                    className="relative w-full h-full rounded-[18px] border border-white/10 overflow-hidden"
@@ -210,30 +227,31 @@ export default function ArrangePage() {
                   items={items.map((i) => i.id)}
                   strategy={rectSortingStrategy}
                 >
-                  {Array.from({ length: 10 }).map((_, index) => {
+                  {Array.from({ length: Math.max(10, Math.ceil(items.length / 5) * 5) }).map((_, index) => {
                     const b = items[index];
                     return (
                       <div
                         key={b?.id || `empty-${index}`}
-                        className="
+                        className={`
                           relative
                           w-full
                           h-full
                           rounded-[18px]
                           border
-                          border-white/10
+                          ${index < 10 ? "border-emerald-500/30 bg-emerald-500/[0.03]" : "border-white/10 bg-white/[0.02]"}
                           overflow-hidden
-                        "
+                        `}
                         style={{
-                          background: "rgba(255,255,255,0.02)",
                           boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
                         }}
                       >
                         {b ? (
                           <SortableItem button={b} />
                         ) : (
-                          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                            <span className="text-[8px] font-mono">empty</span>
+                          <div className="absolute inset-0 flex flex-col items-center justify-center opacity-20 pointer-events-none">
+                            <span className="text-[8px] font-mono">
+                              {index < 10 ? `slot ${index + 1}` : "empty"}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -242,6 +260,30 @@ export default function ArrangePage() {
                 </SortableContext>
               </DndContext>
             )}
+            </div>
+
+            <div className="w-14 flex flex-col gap-3 shrink-0">
+              <button 
+                onClick={scrollUp}
+                className="flex-1 flex items-center justify-center rounded-[18px] border border-white/10 hover:bg-white/[0.05] active:bg-white/[0.1] transition-colors"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                }}
+              >
+                <ChevronUp size={28} className="text-white/40" />
+              </button>
+              <button 
+                onClick={scrollDown}
+                className="flex-1 flex items-center justify-center rounded-[18px] border border-white/10 hover:bg-white/[0.05] active:bg-white/[0.1] transition-colors"
+                style={{
+                  background: "rgba(255,255,255,0.02)",
+                  boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5)",
+                }}
+              >
+                <ChevronDown size={28} className="text-white/40" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

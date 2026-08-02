@@ -24,7 +24,6 @@ export default function Home() {
         padding: "16px",
       }}
     >
-      {/* Device card — rotation lives here, not on <main> */}
       <div
         className="
           relative
@@ -37,20 +36,15 @@ export default function Home() {
         style={{
           background:
             "linear-gradient(145deg, #343434 0%, #111 38%, #050505 100%)",
-          // Smooth in-place rotation — immune to address-bar resize
           transform: flipped ? "rotate(-90deg)" : "rotate(90deg)",
           transformOrigin: "center center",
           transition: "transform 0.25s ease, width 0.25s ease, height 0.25s ease",
-          // When rotated, CSS width is the on-screen physical height.
-          // We expand it to fill the long edge of the phone.
           width: "calc(100dvh - 48px)",
           height: "calc(100dvw - 48px)",
           maxWidth: "none",
-          // Hide until client has mounted to prevent portrait→landscape flash
           visibility: ready ? "visible" : "hidden",
         }}
       >
-        {/* Inner deck */}
         <div
           className="
             relative
@@ -68,7 +62,6 @@ export default function Home() {
               "inset 0 1px 1px rgba(255,255,255,0.10), inset 0 -2px 5px rgba(0,0,0,0.9)",
           }}
         >
-          {/* subtle reflection */}
           <div
             className="
               pointer-events-none
@@ -89,14 +82,13 @@ export default function Home() {
             onToggleRotation={toggleRotation}
           />
 
-          {/* Keys */}
-          <div 
+          <div
             className="relative flex-1 grid gap-3 overflow-hidden pr-1 grid-cols-5 grid-rows-2 w-full h-full"
             style={{ scrollbarWidth: "none" }}
           >
             {Array.from({ length: 10 }).map((_, index) => {
               const b = !loading ? buttons[index] : null;
-              
+
               return (
                 <div
                   key={b?.id || `slot-${index}`}

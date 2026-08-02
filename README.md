@@ -112,6 +112,15 @@ curl -X POST http://localhost:8888/reload   # server re-reads config.json
 
 and tap **↻ reload** in the UI to refresh the button list.
 
+## Arranging Buttons
+
+You can visually reorder your buttons without touching the JSON file directly.
+
+1. Tap **☷ arrange** in the UI to open the arrange mode.
+2. Drag and drop the buttons to reorder them in the grid. 
+3. The first 10 slots (highlighted with a faint green border) are the **Active Slots** and will appear on the main cyberdeck control surface. Any buttons placed after the 10th slot act as an "inventory" and won't be shown on the main deck.
+4. Tap **save** to write the new order directly back to `server/config.json`.
+
 ## API
 
 | Method | Route            | Description                          |
@@ -119,6 +128,7 @@ and tap **↻ reload** in the UI to refresh the button list.
 | GET    | `/config`        | Returns the full button list as JSON   |
 | POST   | `/action/{id}`   | Runs the command for that button id    |
 | POST   | `/reload`        | Re-reads `config.json` from disk       |
+| POST   | `/update-config` | Saves a new array of buttons to disk   |
 
 ## Notes & gotchas
 
